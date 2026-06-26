@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>আল-হাদিস ও ইসলামিক স্টাডিজ বিভাগ | Al-Hadith & Islamic Studies</title>
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ----- গ্লোবাল রিসেট ও ফন্ট ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f8f6f0 0%, #efeae1 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        /* ----- সাইড মেনু (ওভারলে) ----- */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+
+        .side-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -320px;
+            width: 300px;
+            max-width: 85%;
+            height: 100%;
+            background: #fcf6ed;
+            box-shadow: 8px 0 30px rgba(40, 25, 10, 0.25);
+            z-index: 1000;
+            padding: 30px 18px 30px 22px;
+            overflow-y: auto;
+            transition: left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            border-right: 2px solid #dcc9b4;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .side-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #dbc3a8;
+            margin-bottom: 8px;
+        }
+
+        .side-menu-header h2 {
+            font-size: 1.5rem;
+            color: #2c1f12;
+            font-weight: 700;
+        }
+
+        .side-menu-header h2 i {
+            color: #a67c4e;
+            margin-right: 8px;
+        }
+
+        .close-menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #5f4a33;
+            cursor: pointer;
+            padding: 0 6px;
+            transition: 0.2s;
+        }
+
+        .close-menu-btn:hover {
+            color: #2b1b0e;
+            transform: rotate(90deg);
+        }
+
+        /* সাইড মেনুর আইটেম গ্রুপ */
+        .menu-section {
+            margin-bottom: 12px;
+        }
+
+        .menu-section-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #3f2e1d;
+            padding: 8px 0 4px 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px dashed #dac09a;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .menu-section-title i {
+            color: #7a5d3e;
+            font-size: 1rem;
+            transition: 0.25s;
+        }
+
+        .menu-section-title .toggle-icon {
+            margin-left: auto;
+            font-size: 0.9rem;
+            color: #8b6f50;
+        }
+
+        .menu-section-title:hover {
+            color: #1f140b;
+        }
+
+        /* ড্রপডাউন লিস্ট (বই/গাইড) */
+        .menu-dropdown {
+            list-style: none;
+            padding-left: 12px;
+            margin-top: 4px;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .menu-dropdown.open {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        .menu-dropdown li {
+            padding: 5px 0 5px 8px;
+            border-bottom: 1px solid #efe4d6;
+            font-size: 0.98rem;
+        }
+
+        .menu-dropdown li:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item-parent {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 6px 4px 6px 0;
+            border-radius: 6px;
+            transition: 0.1s;
+            color: #2d1f11;
+            font-weight: 500;
+        }
+
+        .menu-item-parent:hover {
+            background: #efe4d6;
+            padding-left: 8px;
+        }
+
+        .menu-item-parent i {
+            color: #8b6f50;
+            transition: 0.25s;
+        }
+
+        .menu-item-parent .arrow-icon {
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        /* চাইল্ড অধ্যায় লিস্ট */
+        .sub-chapter-list {
+            list-style: none;
+            padding-left: 22px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.25s ease;
+            opacity: 0;
+        }
+
+        .sub-chapter-list.open {
+            max-height: 800px;
+            opacity: 1;
+        }
+
+        .sub-chapter-list li {
+            padding: 6px 0 6px 8px;
+            font-size: 0.9rem;
+            border-bottom: none;
+        }
+
+        .sub-chapter-list a {
+            text-decoration: none;
+            color: #3f2d1b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 6px;
+            border-radius: 20px;
+            transition: 0.15s;
+        }
+
+        .sub-chapter-list a:hover {
+            background: #e1cfb9;
+            padding-left: 14px;
+            color: #1f140b;
+        }
+
+        .sub-chapter-list a i {
+            font-size: 0.8rem;
+            color: #7a5d3e;
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            padding-top: 18px;
+            border-top: 2px solid #dbc3a8;
+            font-size: 0.85rem;
+            color: #6f5841;
+            text-align: center;
+        }
+
+        /* ----- মূল কন্টেইনার (হেডার সহ) ----- */
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255, 247, 235, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 56px 56px 40px 40px;
+            padding: 30px 25px 45px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35),
+                        0 2px 8px rgba(255, 215, 175, 0.3) inset;
+            border: 1px solid rgba(255, 235, 210, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* ----- হেডার (থ্রি ডট + ল্যাঙ্গুয়েজ টগল) ----- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .menu-toggle-btn {
+            background: #dac09a;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+            font-size: 1.8rem;
+            color: #2c1f12;
+            box-shadow: 0 4px 0 #b1977c, 0 6px 12px rgba(80, 50, 20, 0.15);
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle-btn:hover {
+            transform: scale(1.04);
+            background: #ceb292;
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c1f12;
+            letter-spacing: -0.5px;
+            text-shadow: 3px 3px 0 rgba(210, 180, 140, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .header-title i {
+            color: #a67c4e;
+            font-size: 2rem;
+            filter: drop-shadow(0 4px 6px rgba(120, 70, 30, 0.2));
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header .subtitle {
+            font-size: 1.0rem;
+            color: #5f4a33;
+            background: rgba(220, 190, 160, 0.25);
+            padding: 6px 22px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+            border: 1px solid #dac09a;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        /* ভাষা টগল বাটন */
+        .lang-toggle {
+            background: #e7dbcb;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #3f2e1d;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #dac09a;
+            box-shadow: 0 2px 8px rgba(80, 50, 20, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lang-toggle:hover {
+            background: #dac3ae;
+            transform: scale(1.03);
+        }
+
+        .lang-toggle i {
+            color: #7a5d3e;
+        }
+
+        /* ----- সার্চ বক্স ----- */
+        .search-wrapper {
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b6f50;
+            font-size: 1.1rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border-radius: 60px;
+            border: 2px solid #dac09a;
+            background: #fcf6ed;
+            font-size: 1.05rem;
+            color: #2c1f12;
+            outline: none;
+            transition: 0.25s;
+            box-shadow: 0 2px 10px rgba(80, 50, 20, 0.06);
+        }
+
+        .search-box input:focus {
+            border-color: #b48b5c;
+            box-shadow: 0 4px 18px rgba(180, 139, 92, 0.2);
+            background: #fffbf5;
+        }
+
+        .search-box input::placeholder {
+            color: #a08972;
+            font-weight: 300;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8b6f50;
+            font-size: 2.5rem;
+            cursor: pointer;
+            display: none;
+            padding: 10px 10px;
+            border-radius: 30px;
+            transition: 0.15s;
+        }
+
+        .search-clear:hover {
+            background: #e1cfb9;
+            color: #3f2e1d;
+        }
+
+        .search-clear.visible {
+            display: block;
+        }
+
+        .no-result {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6f5841;
+            font-size: 1.1rem;
+            display: none;
+        }
+
+        .no-result i {
+            font-size: 2.5rem;
+            color: #b6936a;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .no-result.visible {
+            display: block;
+        }
+
+        /* ----- ট্যাব (বই / গাইড) ----- */
+        .tab-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #e7dbcb;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3f2e1d;
+            box-shadow: 0 6px 0 #b1977c, 0 8px 18px rgba(100, 70, 40, 0.15);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #f0e0cc;
+            flex: 0 1 auto;
+        }
+
+        .tab-btn i {
+            font-size: 1.3rem;
+            color: #7a5d3e;
+        }
+
+        .tab-btn.active {
+            background: #b48b5c;
+            color: #fef7ed;
+            box-shadow: 0 4px 0 #6b4f31, 0 10px 22px -6px #7a5d3e;
+            border-color: #dbb78c;
+            transform: translateY(1px);
+        }
+
+        .tab-btn.active i {
+            color: #faeedb;
+        }
+
+        .tab-btn:hover {
+            transform: scale(1.02) translateY(-2px);
+            background: #dac3ae;
+        }
+
+        .tab-btn.active:hover {
+            transform: scale(1.02) translateY(0px);
+            background: #b48b5c;
+        }
+
+        /* ----- গ্রিড (কার্ড) ----- */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px 22px;
+            margin-top: 6px;
+        }
+
+        /* ----- কার্ড স্টাইল ----- */
+        .book-card {
+            background: #fcf6ed;
+            border-radius: 32px;
+            padding: 18px 16px 16px 16px;
+            box-shadow: 0 8px 22px rgba(80, 55, 30, 0.10), 0 2px 0 #dcc9b4 inset;
+            border: 1px solid #e5d2bb;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(2px);
+            transform: translateY(0);
+            animation: cardFadeUp 0.5s ease backwards;
+        }
+
+        .book-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 24px 38px -12px rgba(80, 50, 20, 0.35), 0 0 0 1px #dbb48b;
+            background: #fffbf5;
+            border-color: #c9aa84;
+        }
+
+        .book-card.hidden {
+            display: none;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .card-header i {
+            font-size: 2.1rem;
+            color: #9b7a58;
+            width: 44px;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .book-card:hover .card-header i {
+            color: #7a5a38;
+            transform: rotate(-4deg) scale(1.05);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2b1b0e;
+            line-height: 1.3;
+            letter-spacing: -0.3px;
+        }
+
+        .card-badge {
+            font-size: 0.8rem;
+            background: #dac09a;
+            color: #2d1f11;
+            padding: 3px 12px;
+            border-radius: 40px;
+            align-self: flex-start;
+            font-weight: 600;
+            margin: 5px 0 8px;
+            letter-spacing: 0.3px;
+            border: 1px solid #b6936a;
+        }
+
+        .chapter-list {
+            list-style: none;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-top: 1px dashed #dbc3a8;
+            padding-top: 14px;
+        }
+
+        .chapter-item {
+            background: #f1e7db;
+            padding: 10px 12px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #3f2d1b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.15s;
+            border: 1px solid transparent;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+        }
+
+        .chapter-item i {
+            color: #7f623f;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .chapter-item:hover {
+            background: #e1cfb9;
+            border-color: #b58f68;
+            transform: translateX(6px);
+            box-shadow: 0 4px 8px rgba(110, 70, 30, 0.1);
+        }
+
+        .chapter-item:hover i {
+            transform: translateX(4px);
+            color: #4d341d;
+        }
+
+        .chapter-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* ----- অ্যানিমেশন ----- */
+        @keyframes cardFadeUp {
+            0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ----- রেসপন্সিভ ----- */
+        @media (max-width: 700px) {
+            body { padding: 12px; }
+            .container {
+                padding: 16px 12px 28px;
+                border-radius: 28px;
+            }
+            .header-title {
+                font-size: 1.7rem;
+            }
+            .header-title i {
+                font-size: 1.6rem;
+            }
+            .header .subtitle {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+                white-space: normal;
+            }
+            .menu-toggle-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 1.5rem;
+            }
+            .lang-toggle {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            .search-box input {
+                font-size: 0.95rem;
+                padding: 12px 16px 12px 44px;
+            }
+            .tab-btn {
+                font-size: 0.95rem;
+                padding: 8px 16px;
+                gap: 6px;
+                flex: 1 1 120px;
+                justify-content: center;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+            .card-title {
+                font-size: 1.15rem;
+            }
+            .chapter-item {
+                font-size: 0.85rem;
+                padding: 8px 10px;
+            }
+            .side-menu {
+                width: 280px;
+                padding: 22px 14px 20px 18px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .header-title {
+                font-size: 1.3rem;
+            }
+            .tab-btn {
+                font-size: 0.8rem;
+                padding: 6px 10px;
+                flex: 1 1 70px;
+            }
+            .tab-btn i {
+                font-size: 0.9rem;
+            }
+            .book-card {
+                padding: 12px;
+            }
+            .lang-toggle {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+            }
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 35px;
+            color: #6f5841;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #dccbbc;
+            padding-top: 22px;
+        }
+        .footer-note i {
+            color: #a17d5a;
+        }
+
+        .side-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+        .side-menu::-webkit-scrollbar-track {
+            background: #efe4d6;
+        }
+        .side-menu::-webkit-scrollbar-thumb {
+            background: #b6936a;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- সাইড মেনু ওভারলে -->
+    <div class="side-menu-overlay" id="sideOverlay"></div>
+
+    <!-- সাইড মেনু -->
+    <nav class="side-menu" id="sideMenu" role="navigation" aria-label="প্রধান মেনু">
+        <div class="side-menu-header">
+            <h2 id="sideMenuTitle"><i class="fas fa-bars-staggered"></i> মেনু</h2>
+            <button class="close-menu-btn" id="closeMenuBtn" aria-label="মেনু বন্ধ করুন">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title" data-toggle="bookSection">
+                <i class="fas fa-book-open"></i> <span id="menuBooksLabel">বইসমূহ</span>
+                <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <ul class="menu-dropdown" id="bookSectionDropdown"></ul>
+        </div>
+
+        <div class="menu-section">
+            <div class="menu-section-title" data-toggle="guideSection">
+                <i class="fas fa-compass"></i> <span id="menuGuidesLabel">গাইডসমূহ</span>
+                <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <ul class="menu-dropdown" id="guideSectionDropdown"></ul>
+        </div>
+
+        <div class="menu-footer" id="menuFooter">
+            <i class="fas fa-mosque"></i> ফাজিল (অনার্স) ১ম বর্ষ আল-হাদিস এন্ড ইসলামিক স্টাডিজ বিভাগ
+        </div>
+    </nav>
+
+    <!-- মূল কন্টেইনার -->
+    <div class="container" role="main">
+        <!-- হেডার -->
+        <div class="header">
+            <div class="header-left">
+                <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="মেনু খুলুন">
+                    <i class="fas fa-ellipsis-vertical"></i>
+                </button>
+                <div class="header-title">
+                    <i class="fas fa-book-quran" aria-hidden="true"></i>
+                    <span id="mainTitle">ফাজিল (অনার্স) ১ম বর্ষ আল-হাদিস এন্ড ইসলামিক স্টাডিজ বিভাগ</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="subtitle" id="headerSubtitle"><i class="fas fa-chevron-circle-right" style="margin-right: 6px;"></i> বই ও গাইড PDF</span>
+                <button class="lang-toggle" id="langToggle" aria-label="ভাষা পরিবর্তন">
+                    <i class="fas fa-globe"></i> <span id="langLabel">EN</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- সার্চ -->
+        <div class="search-wrapper">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="বই, গাইড বা অধ্যায়ের নাম লিখুন..." aria-label="সার্চ করুন" autocomplete="off" />
+                <button class="search-clear" id="searchClear" aria-label="সার্চ মুছুন">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ট্যাব -->
+        <div class="tab-wrapper" role="tablist">
+            <button class="tab-btn active" data-tab="books" role="tab" aria-selected="true" aria-controls="books-panel">
+                <i class="fas fa-book-open"></i> <span class="tabLabel">বইসমূহ</span>
+            </button>
+            <button class="tab-btn" data-tab="guides" role="tab" aria-selected="false" aria-controls="guides-panel">
+                <i class="fas fa-compass"></i> <span class="tabLabel">গাইড</span>
+            </button>
+        </div>
+
+        <!-- প্যানেল -->
+        <div id="books-panel" role="tabpanel" aria-labelledby="books-tab">
+            <div class="card-grid" id="booksGrid"></div>
+        </div>
+        <div id="guides-panel" role="tabpanel" aria-labelledby="guides-tab" style="display: none;">
+            <div class="card-grid" id="guidesGrid"></div>
+        </div>
+
+        <div class="no-result" id="noResult">
+            <i class="fas fa-search"></i>
+            <p id="noResultMsg">আপনার অনুসন্ধানের সাথে মিলে এমন কোনো বই বা গাইড পাওয়া যায়নি।</p>
+        </div>
+
+        <div class="footer-note" id="footerNote">
+            <i class="fas fa-hand-pointer"></i> <span id="footerText">প্রতিটি অধ্যায়ে ক্লিক করলে গুগল ড্রাইভে যাবে</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ----- ডেটা: ৭টি বই ও ৭টি গাইড (বাংলা + ইংরেজি) PDF থেকে হুবহু নেওয়া -----
+            const booksData = [
+                { 
+                    titleBn: "মুসতালাহুল হাদিস", 
+                    titleEn: "Mustalahul Hadith",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: মুসতালাহুল হাদিস শাস্ত্র: পরিচয়, আলোচ্য বিষয়, উদেশ্য, উৎপত্তি ও যুগ পরিক্রমায় ক্রমবিকাশ, এ সংক্রান্ত প্রসিদ্ধ গ্রন্থাবলি", nameEn: "Chapter 1: The Science of Mustalah al-Hadith: Definition, Subject Matter, Objectives, Origins and Historical Evolution, and Prominent Works on the Subject.", link: "https://drive.google.com/file/d/1bjq_Ucwr02Z66uuB2TwZjugqg5qYCfka/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: আমাদের নিকট পোঁছার দিক থেকে হাদিস এর প্রকাশেরে", nameEn: "Chapter 2: Classification of Hadith based on the mode of transmission to us", link: "https://drive.google.com/file/d/1T7-Dt2HLika3XOWqCM-UclpFYtLyjMPE/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়", nameEn: "Chapter 3", link: "https://drive.google.com/file/d/14BYx2v1PIPMKMmo0R_3cfZxCn6WVnRMC/view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: রাবি: পরিচয়, গ্রহণযোগ্য হওয়ার শর্তাবলি, জারহ ও তাদিলের গ্রন্থাবলি সম্পর্কে প্রাথমিক ধারণা, জারহ ও তাদিলের স্তরবিন্যাস এবং জারহ ও তাদিলের শব্দাবলি", nameEn: "Chapter 4: The Narrator (Rāwī): Identity, conditions for acceptability, an overview of works on *Jarh* and *Ta‘dīl*, the classification of *Jarh* and *Ta‘dīl* levels, and the terminology of *Jarh* and *Ta‘dīl*.", link: "https://drive.google.com/file/d/1xF04wZ3ZE32TfoUf2FHqf42YG eoaZEU3/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: রিওয়ায়াত: পরিচয়, রিওয়ায়াত সংরক্ষণের পদ্ধতি, রিওয়ায়াত গ্রহণ ও বর্ণনার পদ্ধতি মালা ও রিওয়ায়াতে তার আদি সময়", nameEn: "Chapter 5: Riwayah (Narration): Definition, methods of preservation, procedures for acceptance and narration, and the etiquette of narration.", link: "https://drive.google.com/file/d/1TxDPy6V0AwFZN2oT7TEj4yyQ-37zsPks/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: সন্দি: পরিচয়, গুরুত্ব ও সুক্ষ্মদিকসমূহ", nameEn: "Chapter 6: Sanad: Definition, Significance, and Nuances", link: "https://drive.google.com/file/d/1X3VPvwJpocROITc4ZYgepfNI_pR8I13U/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: পরিচয়া পরিচিতি", nameEn: "Chapter 7: Introduction to Terminology", link: "https://drive.google.com/file/d/16WfgYo-hWJMkpzK2nxCVec7YL_cmuM5e/view?usp=sharing" },
+                        { nameBn: "সংক্ষিপ্ত প্রশ্ন", nameEn: "Short questions", link: "https://drive.google.com/file/d/1lyhNlzKCoFQalvg6Wldq_O7ScETmi8s/view?usp=sharing" },
+                        { nameBn: "মেডল টেস্ট ও বিগত সালের", nameEn: "Model test and previous year's", link: "https://drive.google.com/file/d/1ygp7HsoP5YXFdkbEeeMMCldM dDYQg7no/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "আল লুগাতুল আরাবিয়্যাতুত তা’তবীকিয়্যাহ", 
+                    titleEn: "Al Lugatul Arabiyatut Ta-Tabiqiyah",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "ক.ব্যাকরণ মান-২০", nameEn: "A. Grammar (Marks: 20)", link: "https://drive.google.com/file/d/1-nJwgXEGJ3uli8 umolEFB8Ox-0ZwCwGb/view?usp=sharing" },
+                        { nameBn: "খ.বিৱাম চিহ্ন ও বর্ণপ্রকরণ মান-১০", nameEn: "B. Punctuation and Orthography – Marks: 10", link: "https://drive.google.com/file/d/1QORzve1HqWY vLejnJmabYZMqgnHR6RAr/view?usp=sharing" },
+                        { nameBn: "গ.পত্র ও দরখান্ত মান-১০", nameEn: "C. Letter and Application – Marks: 10", link: "https://drive.google.com/file/d/1U6TIY_DNrFXrN dCUjA3NQafbhjZr1WRD/view?usp=drive_link" },
+                        { nameBn: "ঘ. কেখাপকথন মান-১০", nameEn: "d. Conversation (Marks: 10)", link: "https://drive.google.com/file/d/1rB69z_SeYuvajp vx17SBOWFRAJscTNWT/view?usp=sharing" },
+                        { nameBn: "চ. অনুচ্ছেদ লিখন মান-১০", nameEn: "f. Paragraph Writing (Marks: 10)", link: "https://drive.google.com/file/d/1kGfZdmbj0bDLhf CKy15FHVgEJLMqmTkl/view?usp=sharing" },
+                        { nameBn: "ছ. উদ্বৃত্তির প্ৰশ্নান্তর মান-১০", nameEn: "g. Questions and answers based on the quotation – Marks: 10", link: "https://drive.google.com/file/d/1URcCZ3dfk7ppZ Zj93ALBvoYLuj1AE7lv/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের", nameEn: "Model test and previous year's", link: "https://drive.google.com/file/d/1OdGDDtjtXYl1F YGi91PJEVXcD7Mcncwvh/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "উলূমুল হাদিস", 
+                    titleEn: "Ulumul Hadith",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: ইলমু নাসিখ ওয়াল মানসুখ: পরিচয়, গুরুত্ব, নাসিখ ও মানসুখের প্রকারভেদ, অবস্থান, তাদের পরিচয়, প্রকারভেদ ও নাসিখের শর্তাবলি", nameEn: "Chapter 1: The Science of Naskh and Mansukh: Definition, Importance, Types of Naskh and Mansukh, Methods of Identification, and Conditions for Naskh", link: "https://drive.google.com/file/d/1M2NjS0iI5nRjF8OIyDmmGjdZQ2anh0wl/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: ইলমু মুখতালিফুল হাদিস: সংজ্ঞা, শর্ত, বিধান, উদাহরণ ও গুরুত্ব", nameEn: "Chapter 2: The Science of Mukhtalif al-Hadith: Definition, Conditions, Rulings, Examples and Significance", link: "https://drive.google.com/file/d/1i5Gx5Dkmos71Zv6uYYf899wnAHEWl6PS/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়: ইলমু আতরাফিল হাদিস: পরিচয়, গুরুত্ব, আতরাফ গ্রন্থের পরিচিতি", nameEn: "Chapter 3: The Science of Atraf al-Hadith: Definition, Importance, and Introduction to Atraf Works", link: "https://drive.google.com/file/d/1-drMOA1uyeTcFuO_OAid8n-mtbyEjenA/view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: ইলমু জাওয়াইদিল হাদিস: পরিচয়, গুরুত্ব, জাওয়াইদের গ্রন্থ ও মুস্তাদরাকাতের ধারণা", nameEn: "Chapter 4: The Science of Zawa’id al-Hadith: Definition, Importance, Zawa’id Works and the Concept of Mustadrakat", link: "https://drive.google.com/file/d/18wwZtbq_px5oXaVQ1mmKaCuLnR8OgVr4/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: ইলমুল মুখতালিফ ওয়াল মুখতালিফ: সংজ্ঞা, গুরুত্ব, মুখতালিফ ও মুখতালিফের উদাহরণ", nameEn: "Chapter 5: The Science of Mukhtalif and Mukhtalif: Definition, Importance, Examples of Mukhtalif and Mukhtalif", link: "https://drive.google.com/file/d/17QOJ5s0j3Nbs_IvNLLXks2bzHn9YfUJv/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: ইলমু নাসিখিল হাদিস ওয়া মানসুখিহি: পরিচয়, গুরুত্ব, প্রকারভেদ", nameEn: "Chapter 6: The Science of Nasikh al-Hadith and Mansukhih: Definition, Importance, and Types", link: "https://drive.google.com/file/d/1AWJDJ6SaVzFg6dvg9W9dDmWFzbEHHX_H/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: ইলমু মুখতালিফিল হাদিস ওয়া মুখতালিফিহি: সংজ্ঞা, শর্ত, বিধান, উদাহরণ ও গুরুত্ব", nameEn: "Chapter 7: The Science of Mukhtalif al-Hadith and Mukhtalifih: Definition, Conditions, Rulings, Examples, and Significance", link: "https://drive.google.com/file/d/1eC5QoXUT2QYi4DdR3vnw54PaWdbAoawu/view?usp=sharing" },
+                        { nameBn: "৮ম অধ্যায়: ইলমু আতরাফিল হাদিস: পরিচয়, গুরুত্ব, আতরাফ গ্রন্থের পরিচিতি", nameEn: "Chapter 8: The Science of Atraf al-Hadith: Definition, Importance, and Introduction to Atraf Works", link: "https://drive.google.com/file/d/1cmoeFSCyg3xte21QYUQOgMGDJfm84DAj/view?usp=sharing" },
+                        { nameBn: "৯ম অধ্যায়: ইলমু জাওয়াইদিল হাদিস: পরিচয়, গুরুত্ব, জাওয়াইদের গ্রন্থ ও মুস্তাদরাকাতের ধারণা", nameEn: "Chapter 9: The Science of Zawa’id al-Hadith: Definition, Importance, Zawa’id Works and the Concept of Mustadrakat", link: "https://drive.google.com/file/d/1IORqwKO6MsYgBE23vgTaX_Ksukw0Jhej/view?usp=sharing" },
+                        { nameBn: "১০ম অধ্যায়: ইলমুল মুখতালিফ ওয়াল মুখতালিফ: সংজ্ঞা, গুরুত্ব, মুখতালিফ ও মুখতালিফের উদাহরণ", nameEn: "Chapter 10: The Science of Mukhtalif and Mukhtalif: Definition, Importance, Examples of Mukhtalif and Mukhtalif", link: "https://drive.google.com/file/d/1Vx5UvRw7-YEWKFa4z4o3H_aZ02GMM9Mw/view?usp=sharing" },
+                        { nameBn: "১১তম অধ্যায়: ইলমু নাসিখিল হাদিস ওয়া মানসুখিহি: পরিচয়, গুরুত্ব, প্রকারভেদ", nameEn: "Chapter 11: The Science of Nasikh al-Hadith and Mansukhih: Definition, Importance, and Types", link: "https://drive.google.com/file/d/1prUnC0hQ2uqEJuBi2opdvnLmYbJm7s6h/view?usp=sharing" },
+                        { nameBn: "১২তম অধ্যায়: ইলমু মুখতালিফিল হাদিস ওয়া মুখতালিফিহি: সংজ্ঞা, শর্ত, বিধান, উদাহরণ ও গুরুত্ব", nameEn: "Chapter 12: The Science of Mukhtalif al-Hadith and Mukhtalifih: Definition, Conditions, Rulings, Examples, and Significance", link: "https://drive.google.com/file/d/17XwR6yzO8R0UUVS80aYmkG5Iyx0I95Lp/view?usp=sharing" },
+                        { nameBn: "১৩তম অধ্যায়: ইলমু আতরাফিল হাদিস: পরিচয়, গুরুত্ব, আতরাফ গ্রন্থের পরিচিতি", nameEn: "Chapter 13: The Science of Atraf al-Hadith: Definition, Importance, and Introduction to Atraf Works", link: "https://drive.google.com/file/d/1BHLtheTTN1Bm_kwtikrTE5M6KtsLvEW6/view?usp=sharing" },
+                        { nameBn: "১৪তম অধ্যায়: ইলমু জাওয়াইদিল হাদিস: পরিচয়, গুরুত্ব, জাওয়াইদের গ্রন্থ ও মুস্তাদরাকাতের ধারণা", nameEn: "Chapter 14: The Science of Zawa’id al-Hadith: Definition, Importance, Zawa’id Works and the Concept of Mustadrakat", link: "https://drive.google.com/file/d/1IGgHjnr_pAfUQdM9eLReTqG2Vf0JD7x6/view?usp=sharing" },
+                        { nameBn: "১৫তম অধ্যায়: ইলমুল মুখতালিফ ওয়াল মুখতালিফ: সংজ্ঞা, গুরুত্ব, মুখতালিফ ও মুখতালিফের উদাহরণ", nameEn: "Chapter 15: The Science of Mukhtalif and Mukhtalif: Definition, Importance, Examples of Mukhtalif and Mukhtalif", link: "https://drive.google.com/file/d/1rT9UbbtvxMhTdRk7LKtjN73yW42FuvCS/view?usp=sharing" },
+                        { nameBn: "পূর্ণাঙ্গ মডেল টেস্ট", nameEn: "Full Model Test", link: "https://drive.google.com/file/d/1VjK6g2hD5G6oBbKkM5R8n2SJ9gF7L4W5/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "বাংলা সাহিত্য", 
+                    titleEn: "Bangla Literature",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: সন্ধি", nameEn: "Chapter 1: Sandhi", link: "https://drive.google.com/file/d/1qCVkf5i_F1Xla_f HBHI52UZovzPEWTaP/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: সমাস", nameEn: "Chapter 2: Samas", link: "https://drive.google.com/file/d/1iOeew_aKNnOR FvEWbu9L5wV80PdS7eyF/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়: পকৃতি ও পত্রায়", nameEn: "Chapter 3: Prakriti and Pratyay", link: "https://drive.google.com/file/d/1AXQf1lAMQnStlf -qJPQd3XVTkiYhRwg_view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: উপসর্গ", nameEn: "Chapter 4: Upasarga", link: "https://drive.google.com/file/d/1rR2-2fAArlj80jn7f KWH54eIF10KPUWk/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: যতি বা বিবাম চিহ্ন", nameEn: "Chapter 5: Yati or Bibam Chinh", link: "https://drive.google.com/file/d/1xWA5Pbmn5TX CwvepFemB_jLEbSQLU_e1/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: বাগধারা বা বাগবিধি", nameEn: "Chapter 6: Bagdhara or Bagbiddhi", link: "https://drive.google.com/file/d/1aQcaWhKsMqcs ODdMZNkXtGzExYtrPBAU/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: গভবিধান ও স্বভবিধান", nameEn: "Chapter 7: Ghabhidhan and Swabhidhan", link: "https://drive.google.com/file/d/1VxNCgsNzbvtbH KcTpuHFFgyvrxWVy60H/view?usp=sharing" },
+                        { nameBn: "৮ম অধ্যায়: প্ৰমিত বাংলা বানানের নিয়ম", nameEn: "Chapter 8: Rules of Standard Bengali Spelling", link: "https://drive.google.com/file/d/1Woqlhm38r6QLv HyfYHZNOsagr0LswFVI/view?usp=sharing" },
+                        { nameBn: "ব্যাকরণ পরীক্ষার প্ৰস্তুতি", nameEn: "Grammar Exam Preparation", link: "https://drive.google.com/file/d/1Rr1ij9L03EXkg7r ZibHES0de2XHcEhGA/view?usp=sharing" },
+                        { nameBn: "ভাব-সম্প্রসারণ", nameEn: "Idea Expansion", link: "https://drive.google.com/file/d/1MxlKV3RYeiKd_ 61QSd_PNCZkZvckDqnM/view?usp=sharing" },
+                        { nameBn: "চিত্রি-দরখাত", nameEn: "Application", link: "https://drive.google.com/file/d/1zPYKITyluFD6W cKQt98YY1rXed6tPzGu/view?usp=sharing" },
+                        { nameBn: "আবেদনপত্র", nameEn: "Letter of Application", link: "https://drive.google.com/file/d/1EtilsSz3LjMvlvz G77Y_krL6vfG_tqXP/view?usp=sharing" },
+                        { nameBn: "প্রতিবেদন ও মানপত্র লিখন", nameEn: "Report and Memo Writing", link: "https://drive.google.com/file/d/1CkfcazPBMKNu AmVMKbhSajgbrdnziGmY/view?usp=sharing" },
+                        { nameBn: "স্পশাল মেডল টেস্ট ও বিগত সালের প্ৰশ্ন", nameEn: "Special Model Test and Previous Year Questions", link: "https://drive.google.com/file/d/1NJePVo587xC-p blhx7UvU8ADJ4ft52Rn/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "বেসিক ইংরেজি", 
+                    titleEn: "Basic English",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "ভাষা দক্ষতা (Language Skills)", nameEn: "Language Skills", link: "https://drive.google.com/file/d/1xSI94 hUZna0fGDl0jckWz1liO7w7yJpz/view?usp=sharing" },
+                        { nameBn: "মৌলিক ইংরেজি (Basic English)", nameEn: "Basic English", link: "https://drive.google.com/file/d/18DAL JZr2mdupBpewpj_YOCPmFMppc1k G/view?usp=sharing" },
+                        { nameBn: "ভাষার ধারণা (Concept of Language)", nameEn: "Concept of Language", link: "https://drive.google.com/file/d/144Qd hQ2cn52ewhnwntpdTSwrL6KPA0DE /view?usp=sharing" },
+                        { nameBn: "ব্যাকরণ (Grammar)", nameEn: "Grammar", link: "https://drive.google.com/file/d/12DE2 r1n4fJ7EeQJ8jmtlkRHTz0heJEhM/view?usp=sharing" },
+                        { nameBn: "রচনা ও পত্র (Composition & Letter)", nameEn: "Composition & Letter", link: "https://drive.google.com/file/d/1xOwt hClcvG6CWn9nZSpkmpak0Z5-jnC/view?usp=sharing" },
+                        { nameBn: "অনুবাদ (Translation)", nameEn: "Translation", link: "https://drive.google.com/file/d/1xANy kKumhizxTVzlds0jmfLEDWyT8rYO/view?usp=sharing" },
+                        { nameBn: "সম্প্রসারণ ও সারাংশ (Expansion & Summary)", nameEn: "Expansion & Summary", link: "https://drive.google.com/file/d/1gOkb n3iemQBeYtINLP96NiM_-1sTkwQo/view?usp=sharing" },
+                        { nameBn: "প্রশ্ন ও উত্তর (Question & Answer)", nameEn: "Question & Answer", link: "https://drive.google.com/file/d/1LXcw 83IZUp1lcaRTKF87nwPU3SJiRH1w/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "অর্থনীতি ও ইসলামিক অর্থনীতি", 
+                    titleEn: "Economics and Islamic Economics",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: সূচনা (Introduction)", nameEn: "Chapter 1: Introduction", link: "https://drive.google.com/file/d/1xSI94 hUZna0fGDl0jckWz1liO7w7yJpz/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: চাহিদা ও যোগান (Demand and Supply)", nameEn: "Chapter 2: Demand and Supply", link: "https://drive.google.com/file/d/18DAL JZr2mdupBpewpj_YOCPmFMppc1k G/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়: ভোক্তার আচরণ (Consumer Behaviour)", nameEn: "Chapter 3: Consumer Behaviour", link: "https://drive.google.com/file/d/144Qd hQ2cn52ewhnwntpdTSwrL6KPA0DE /view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: উপযোগ বিবেশ্বণ (Utility Analysis)", nameEn: "Chapter 4: Utility Analysis", link: "https://drive.google.com/file/d/12DE2 r1n4fJ7EeQJ8jmtlkRHTz0heJEhM/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: উৎপাদন (Production)", nameEn: "Chapter 5: Production", link: "https://drive.google.com/file/d/1xOwt hClcvG6CWn9nZSpkmpak0Z5-jnC/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: আয় ও সম্পদের বন্দন (Distribution of Income and Wealth)", nameEn: "Chapter 6: Distribution of Income and Wealth", link: "https://drive.google.com/file/d/1xANy kKumhizxTVzlds0jmfLEDWyT8rYO/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: অর্থ ও আর্থিক নীতি (Money and Monetary Policy)", nameEn: "Chapter 7: Money and Monetary Policy", link: "https://drive.google.com/file/d/1gOkb n3iemQBeYtINLP96NiM_-1sTkwQo/view?usp=sharing" },
+                        { nameBn: "৮ম অধ্যায়: বাজার তত্ত্ব (Theory of Market)", nameEn: "Chapter 8: Theory of Market", link: "https://drive.google.com/file/d/1LXcw 83IZUp1lcaRTKF87nwPU3SJiRH1w/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ১ম অধ্যায়: ইসলামি অর্থনীতি: পরিচিতি, প্রকৃতি, নীতি ও উৎস", nameEn: "Islamic Economics Chapter 1: Islamic Economics: Identity, Nature, Scope and Sources", link: "https://drive.google.com/file/d/1v 05lQwcm_lz4_hMLQwO6yMzol yHihQ9r/view?usp=drive_link" },
+                        { nameBn: "ইসলামি অর্থনীতি ২য় অধ্যায়: আধুনিক অর্থব্যবস্থার সাথে ইসলামি অর্থনীতি তুলনা", nameEn: "Islamic Economics Chapter 2: Islamic Economy Compared to Modern Economic System", link: "https://drive.google.com/file/d/1Y Mdhz2r0rKvQPUOUL394eeoQB XkiE3VC/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৩য় অধ্যায়: ইসলামে কর কাঠামো: যাকাত, উশর, খারাজ ও সাদাকাত", nameEn: "Islamic Economics Chapter 3: Tax Structure in Islam: Zakat, Ushr, Kharaj and Sadaqat", link: "https://drive.google.com/file/d/1P HhbfPWfLrKgJfVaW1SDudwYc1 NycoyZ/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৪র্থ অধ্যায়: ইসলামে মালিকানার ধারণা", nameEn: "Islamic Economics Chapter 4: Concept of Ownership in Islam", link: "https://drive.google.com/file/d/1X kaCgmaFJqN3Q5pIEvjWm9TiQy XFwHPJ/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৫ম অধ্যায়: ইসলামে আয় ও ব্যয়ের ধারণা", nameEn: "Islamic Economics Chapter 5: Concept of Income and Expenditure in Islam", link: "https://drive.google.com/file/d/1s sFjb5VcS1Qf6gUnc5Tn_NK9Wc 2M-jp4/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৬ষ্ঠ অধ্যায়: ইসলামে ভূমি নীতি", nameEn: "Islamic Economics Chapter 6: Land Policy in Islam", link: "https://drive.google.com/file/d/17 C5rT7YGA2CbmntAlg7c9HgzO8 mLAGzF/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৭ম অধ্যায়: ইসলামে মুনাফা ও সুদের ধারণা", nameEn: "Islamic Economics Chapter 7: Concept of Profit and Interest in Islam", link: "https://drive.google.com/file/d/1G XWas0T8Xtrm9PHjlSJdqe8mgZ QqS7QX/view?usp=sharing" },
+                        { nameBn: "ইসলামি ব্যাংকিং ১ম অধ্যায়: ইসলামি ব্যাংকিং", nameEn: "Islamic Banking Chapter 1: Islamic Banking", link: "https://drive.google.com/file/d/1 A0Aqjf5AUro6ykpgeq1ZGhTS2r 3aYTQR/view?usp=sharing" },
+                        { nameBn: "ইসলামি ব্যাংকিং ২য় অধ্যায়: ইসলামি ব্যাংকিং কার্যক্রমে আমানত সংগ্ৰহ ও বিনিয়োগ নীতি", nameEn: "Islamic Banking Chapter 2: Deposit and Investment System in Islamic Banking", link: "https://drive.google.com/file/d/1j aUnLEwX61cB_JN4j3ZjgACcD QFYXTRB/view?usp=sharing" },
+                        { nameBn: "ইসলামি ব্যাংকিং ৩য় অধ্যায়: প্রচলিত বিমা ও ইসলামি বিমা (তাকাফুল)", nameEn: "Islamic Banking Chapter 3: Conventional insurance and Islamic insurance (Takaful)", link: "https://drive.google.com/file/d/1h TO_UH_Jtchaijfgu3IN4fYQoYS GW0be/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের প্রশ্ন", nameEn: "Model Test and Previous Year Questions", link: "https://drive.google.com/file/d/1n hC62XwVSUAWJLX167qOqcMt VLSeVWVK/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "বাংলাদেশ স্টাডিজ", 
+                    titleEn: "Bangladesh Studies",
+                    badgeBn: "বই", 
+                    badgeEn: "Book",
+                    icon: "fa-book", 
+                    chapters: [
+                        { nameBn: "আলোচ্য বিষয়: বাংলাদেশ স্টাডিজ পরিচিতি", nameEn: "Topic: Introduction to Bangladesh Studies", link: "https://drive.google.com/file/d/1SAm0WxlGKGpxPq6J3J6HjPqL6Jz7N9Gt/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের প্রশ্ন", nameEn: "Model Test and Previous Year Questions", link: "https://drive.google.com/file/d/1T6L3VkR2W8J9t4M1N7X2Z0A5C1E4R8M/view?usp=sharing" }
+                    ]
+                }
+            ];
+
+            const guidesData = [
+                { 
+                    titleBn: "মুসতালাহুল হাদিস", 
+                    titleEn: "Mustalahul Hadith",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: মুসতালাহুল হাদিস শাস্ত্র: পরিচয়, আলোচ্য বিষয়, উদ্দেশ্য, উৎপত্তি ও যুগ পরিক্রমায় ক্রমবিকাশ, এ সংক্রান্ত প্রসিদ্ধ গ্রন্থাবলি", nameEn: "Chapter 1: The Science of Mustalah al-Hadith: Definition, Subject Matter, Objectives, Origins and Historical Evolution, and Prominent Works on the Subject.", link: "https://drive.google.com/file/d/1bjq_Ucwr02Z66uuB2TwZjugqg5qYCfka/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: আমাদের নিকট পৌঁছার দিক থেকে হাদিস এর প্রকারভেদ", nameEn: "Chapter 2: Classification of Hadith based on the mode of transmission to us", link: "https://drive.google.com/file/d/1T7-Dt2HLIka3XOWqCM-UcIpFYtLyjMPE/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়", nameEn: "Chapter 3", link: "https://drive.google.com/file/d/14BYx2v1PIPMKMmo0R_3cfZxCn6WVnRMC/view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: রাবি: পরিচয়, গ্রহণযোগ্য হওয়ার শর্তাবলি, জারহ ও তাদিলের গ্রন্থাবলি সম্পর্কে প্রাথমিক ধারণা, জারহ ও তাদিলের স্তরবিন্যাস এবং জারহ ও তাদিলের শব্দাবলি", nameEn: "Chapter 4: The Narrator (Rāwī): Identity, conditions for acceptability, an overview of works on *Jarh* and *Ta‘dīl*, the classification of *Jarh* and *Ta‘dīl* levels, and the terminology of *Jarh* and *Ta‘dīl*.", link: "https://drive.google.com/file/d/1xF04wZ3ZE32TFoUf2FHqf42YGeoaZEU3/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: রিওয়ায়াত: পরিচয়, রিওয়ায়াত সংরক্ষণের পদ্ধতি, রিওয়ায়াত গ্রহণ ও বর্ণনার পদ্ধতি মালা ও রিওয়ায়াতের আদব সমূহ", nameEn: "Chapter 5: Riwayah (Narration): Definition, methods of preservation, procedures for acceptance and narration, and the etiquette of narration.", link: "https://drive.google.com/file/d/1TxDPy6V0AwFZN2oT7TEj4yyQ-37zsPks/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: সনদ: পরিচয়, গুরুত্ব ও সূক্ষ্মদিকসমূহ", nameEn: "Chapter 6: Sanad: Definition, Significance, and Nuances", link: "https://drive.google.com/file/d/1X3VPvwJpocROlTc4ZYgepfNI_pR8l13U/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: পরিভাষা পরিচিতি", nameEn: "Chapter 7: Introduction to Terminology", link: "https://drive.google.com/file/d/16WfgYo-hWJMkpzK2nxCVec7YL_cmuM5e/view?usp=sharing" },
+                        { nameBn: "সংক্ষিপ্ত প্রশ্ন", nameEn: "Short questions", link: "https://drive.google.com/file/d/1_IyhNlzKCoFQaIvg6WIdq_O7ScETmi8s/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের", nameEn: "Model test and previous year's", link: "https://drive.google.com/file/d/1ygp7HsoP5YXFdkbEeeMMCIdMdDYQg7no/view?usp=sharing" },
+                    ]
+                },
+                { 
+                    titleBn: "আল লুগাতুল আরাবিয়্যাতুত তা’তবীকিয়্যাহ", 
+                    titleEn: "Al Lugatul Arabiyatut Ta-Tabiqiyah",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "ক.ব্যাকরণ মান-২০", nameEn: "A. Grammar (Marks: 20)", link: "https://drive.google.com/file/d/1-nJwgXEGJ3uli8umoIEFB8Ox-0ZwCwGb/view?usp=sharing" },
+                        { nameBn: "খ.বিরাম চিহ্ন ও বর্ণপ্রকরণ মান-১০", nameEn: "B. Punctuation and Orthography – Marks: 10", link: "https://drive.google.com/file/d/1QORzve1HqWYvLejnJmabYZMegnHR6RAr/view?usp=sharing" },
+                        { nameBn: "গ.পত্র ও দরখাস্ত মান-১০", nameEn: "C. Letter and Application – Marks: 10", link: "https://drive.google.com/file/d/1U6TIY_DNrFXrNdCUjA3NQafbhjZr1WRD/view?usp=drive_link" },
+                        { nameBn: "ঘ. কথোপকথন মান-১০", nameEn: "d. Conversation (Marks: 10)", link: "https://drive.google.com/file/d/1rB69z_SeYuvajpvx17SBOwFRAJscTNwT/view?usp=sharing" },
+                        { nameBn: "চ. অনুচ্ছেদ লিখন মান-১০", nameEn: "f. Paragraph Writing (Marks: 10)", link: "https://drive.google.com/file/d/1kGfZdmbj0bDLhfCKy15FHVgEJLQmqTkI/view?usp=sharing" },
+                        { nameBn: "ছ. উদ্ধৃতির প্রশ্নোত্তর মান-১০", nameEn: "g. Questions and answers based on the quotation – Marks: 10", link: "https://drive.google.com/file/d/1URcCZ3dfk7ppZZj93ALBvoYLuj1AE7lv/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের", nameEn: "Model test and previous year's", link: "https://drive.google.com/file/d/1OdGDDtjtXYl1FYGi91PJEVXcD7Mcncwh/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "উলূমুল হাদিস", 
+                    titleEn: "Ulumul Hadith",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: ইলমু নাসিখ ওয়াল মানসুখ: পরিচয়, গুরুত্ব, নাসিখ ও মানসুখের প্রকারভেদ, অবস্থান, তাদের পরিচয়, প্রকারভেদ ও নাসিখের শর্তাবলি", nameEn: "Chapter 1: The Science of Naskh and Mansukh: Definition, Importance, Types of Naskh and Mansukh, Methods of Identification, and Conditions for Naskh", link: "https://drive.google.com/file/d/1M2NjS0iI5nRjF8OIyDmmGjdZQ2anh0wl/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: ইলমু মুখতালিফুল হাদিস: সংজ্ঞা, শর্ত, বিধান, উদাহরণ ও গুরুত্ব", nameEn: "Chapter 2: The Science of Mukhtalif al-Hadith: Definition, Conditions, Rulings, Examples and Significance", link: "https://drive.google.com/file/d/1i5Gx5Dkmos71Zv6uYYf899wnAHEWl6PS/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়: ইলমু আতরাফিল হাদিস: পরিচয়, গুরুত্ব, আতরাফ গ্রন্থের পরিচিতি", nameEn: "Chapter 3: The Science of Atraf al-Hadith: Definition, Importance, and Introduction to Atraf Works", link: "https://drive.google.com/file/d/1-drMOA1uyeTcFuO_OAid8n-mtbyEjenA/view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: ইলমু জাওয়াইদিল হাদিস: পরিচয়, গুরুত্ব, জাওয়াইদের গ্রন্থ ও মুস্তাদরাকাতের ধারণা", nameEn: "Chapter 4: The Science of Zawa’id al-Hadith: Definition, Importance, Zawa’id Works and the Concept of Mustadrakat", link: "https://drive.google.com/file/d/18wwZtbq_px5oXaVQ1mmKaCuLnR8OgVr4/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: ইলমুল মুখতালিফ ওয়াল মুখতালিফ: সংজ্ঞা, গুরুত্ব, মুখতালিফ ও মুখতালিফের উদাহরণ", nameEn: "Chapter 5: The Science of Mukhtalif and Mukhtalif: Definition, Importance, Examples of Mukhtalif and Mukhtalif", link: "https://drive.google.com/file/d/17QOJ5s0j3Nbs_IvNLLXks2bzHn9YfUJv/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: ইলমু নাসিখিল হাদিস ওয়া মানসুখিহি: পরিচয়, গুরুত্ব, প্রকারভেদ", nameEn: "Chapter 6: The Science of Nasikh al-Hadith and Mansukhih: Definition, Importance, and Types", link: "https://drive.google.com/file/d/1AWJDJ6SaVzFg6dvg9W9dDmWFzbEHHX_H/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: ইলমু মুখতালিফিল হাদিস ওয়া মুখতালিফিহি: সংজ্ঞা, শর্ত, বিধান, উদাহরণ ও গুরুত্ব", nameEn: "Chapter 7: The Science of Mukhtalif al-Hadith and Mukhtalifih: Definition, Conditions, Rulings, Examples, and Significance", link: "https://drive.google.com/file/d/1eC5QoXUT2QYi4DdR3vnw54PaWdbAoawu/view?usp=sharing" },
+                        { nameBn: "৮ম অধ্যায়: ইলমু আতরাফিল হাদিস: পরিচয়, গুরুত্ব, আতরাফ গ্রন্থের পরিচিতি", nameEn: "Chapter 8: The Science of Atraf al-Hadith: Definition, Importance, and Introduction to Atraf Works", link: "https://drive.google.com/file/d/1cmoeFSCyg3xte21QYUQOgMGDJfm84DAj/view?usp=sharing" },
+                        { nameBn: "৯ম অধ্যায়: ইলমু জাওয়াইদিল হাদিস: পরিচয়, গুরুত্ব, জাওয়াইদের গ্রন্থ ও মুস্তাদরাকাতের ধারণা", nameEn: "Chapter 9: The Science of Zawa’id al-Hadith: Definition, Importance, Zawa’id Works and the Concept of Mustadrakat", link: "https://drive.google.com/file/d/1IORqwKO6MsYgBE23vgTaX_Ksukw0Jhej/view?usp=sharing" },
+                        { nameBn: "১০ম অধ্যায়: ইলমুল মুখতালিফ ওয়াল মুখতালিফ: সংজ্ঞা, গুরুত্ব, মুখতালিফ ও মুখতালিফের উদাহরণ", nameEn: "Chapter 10: The Science of Mukhtalif and Mukhtalif: Definition, Importance, Examples of Mukhtalif and Mukhtalif", link: "https://drive.google.com/file/d/1Vx5UvRw7-YEWKFa4z4o3H_aZ02GMM9Mw/view?usp=sharing" },
+                        { nameBn: "১১তম অধ্যায়: ইলমু নাসিখিল হাদিস ওয়া মানসুখিহি: পরিচয়, গুরুত্ব, প্রকারভেদ", nameEn: "Chapter 11: The Science of Nasikh al-Hadith and Mansukhih: Definition, Importance, and Types", link: "https://drive.google.com/file/d/1prUnC0hQ2uqEJuBi2opdvnLmYbJm7s6h/view?usp=sharing" },
+                        { nameBn: "১২তম অধ্যায়: ইলমু মুখতালিফিল হাদিস ওয়া মুখতালিফিহি: সংজ্ঞা, শর্ত, বিধান, উদাহরণ ও গুরুত্ব", nameEn: "Chapter 12: The Science of Mukhtalif al-Hadith and Mukhtalifih: Definition, Conditions, Rulings, Examples, and Significance", link: "https://drive.google.com/file/d/17XwR6yzO8R0UUVS80aYmkG5Iyx0I95Lp/view?usp=sharing" },
+                        { nameBn: "১৩তম অধ্যায়: ইলমু আতরাফিল হাদিস: পরিচয়, গুরুত্ব, আতরাফ গ্রন্থের পরিচিতি", nameEn: "Chapter 13: The Science of Atraf al-Hadith: Definition, Importance, and Introduction to Atraf Works", link: "https://drive.google.com/file/d/1BHLtheTTN1Bm_kwtikrTE5M6KtsLvEW6/view?usp=sharing" },
+                        { nameBn: "১৪তম অধ্যায়: ইলমু জাওয়াইদিল হাদিস: পরিচয়, গুরুত্ব, জাওয়াইদের গ্রন্থ ও মুস্তাদরাকাতের ধারণা", nameEn: "Chapter 14: The Science of Zawa’id al-Hadith: Definition, Importance, Zawa’id Works and the Concept of Mustadrakat", link: "https://drive.google.com/file/d/1IGgHjnr_pAfUQdM9eLReTqG2Vf0JD7x6/view?usp=sharing" },
+                        { nameBn: "১৫তম অধ্যায়: ইলমুল মুখতালিফ ওয়াল মুখতালিফ: সংজ্ঞা, গুরুত্ব, মুখতালিফ ও মুখতালিফের উদাহরণ", nameEn: "Chapter 15: The Science of Mukhtalif and Mukhtalif: Definition, Importance, Examples of Mukhtalif and Mukhtalif", link: "https://drive.google.com/file/d/1rT9UbbtvxMhTdRk7LKtjN73yW42FuvCS/view?usp=sharing" },
+                        { nameBn: "পূর্ণাঙ্গ মডেল টেস্ট", nameEn: "Full Model Test", link: "https://drive.google.com/file/d/1VjK6g2hD5G6oBbKkM5R8n2SJ9gF7L4W5/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "বাংলা সাহিত্য", 
+                    titleEn: "Bangla Literature",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: সন্ধি", nameEn: "Chapter 1: Sandhi", link: "https://drive.google.com/file/d/1qCVkf5i_F1Xla_f HBHI52UZovzPEWTaP/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: সমাস", nameEn: "Chapter 2: Samas", link: "https://drive.google.com/file/d/1iOeew_aKNnOR FvEWbu9L5wV80PdS7eyF/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়: পকৃতি ও পত্রায়", nameEn: "Chapter 3: Prakriti and Pratyay", link: "https://drive.google.com/file/d/1AXQf1lAMQnStlf -qJPQd3XVTkiYhRwg_view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: উপসর্গ", nameEn: "Chapter 4: Upasarga", link: "https://drive.google.com/file/d/1rR2-2fAArlj80jn7f KWH54eIF10KPUWk/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: যতি বা বিবাম চিহ্ন", nameEn: "Chapter 5: Yati or Bibam Chinh", link: "https://drive.google.com/file/d/1xWA5Pbmn5TX CwvepFemB_jLEbSQLU_e1/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: বাগধারা বা বাগবিধি", nameEn: "Chapter 6: Bagdhara or Bagbiddhi", link: "https://drive.google.com/file/d/1aQcaWhKsMqcs ODdMZNkXtGzExYtrPBAU/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: গভবিধান ও স্বভবিধান", nameEn: "Chapter 7: Ghabhidhan and Swabhidhan", link: "https://drive.google.com/file/d/1VxNCgsNzbvtbH KcTpuHFFgyvrxWVy60H/view?usp=sharing" },
+                        { nameBn: "৮ম অধ্যায়: প্ৰমিত বাংলা বানানের নিয়ম", nameEn: "Chapter 8: Rules of Standard Bengali Spelling", link: "https://drive.google.com/file/d/1Woqlhm38r6QLv HyfYHZNOsagr0LswFVI/view?usp=sharing" },
+                        { nameBn: "ব্যাকরণ পরীক্ষার প্ৰস্তুতি", nameEn: "Grammar Exam Preparation", link: "https://drive.google.com/file/d/1Rr1ij9L03EXkg7r ZibHES0de2XHcEhGA/view?usp=sharing" },
+                        { nameBn: "ভাব-সম্প্রসারণ", nameEn: "Idea Expansion", link: "https://drive.google.com/file/d/1MxlKV3RYeiKd_ 61QSd_PNCZkZvckDqnM/view?usp=sharing" },
+                        { nameBn: "চিত্রি-দরখাত", nameEn: "Application", link: "https://drive.google.com/file/d/1zPYKITyluFD6W cKQt98YY1rXed6tPzGu/view?usp=sharing" },
+                        { nameBn: "আবেদনপত্র", nameEn: "Letter of Application", link: "https://drive.google.com/file/d/1EtilsSz3LjMvlvz G77Y_krL6vfG_tqXP/view?usp=sharing" },
+                        { nameBn: "প্রতিবেদন ও মানপত্র লিখন", nameEn: "Report and Memo Writing", link: "https://drive.google.com/file/d/1CkfcazPBMKNu AmVMKbhSajgbrdnziGmY/view?usp=sharing" },
+                        { nameBn: "স্পশাল মেডল টেস্ট ও বিগত সালের প্ৰশ্ন", nameEn: "Special Model Test and Previous Year Questions", link: "https://drive.google.com/file/d/1NJePVo587xC-p blhx7UvU8ADJ4ft52Rn/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "বেসিক ইংরেজি", 
+                    titleEn: "Basic English",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "ভাষা দক্ষতা (Language Skills)", nameEn: "Language Skills", link: "https://drive.google.com/file/d/1xSI94 hUZna0fGDl0jckWz1liO7w7yJpz/view?usp=sharing" },
+                        { nameBn: "মৌলিক ইংরেজি (Basic English)", nameEn: "Basic English", link: "https://drive.google.com/file/d/18DAL JZr2mdupBpewpj_YOCPmFMppc1k G/view?usp=sharing" },
+                        { nameBn: "ভাষার ধারণা (Concept of Language)", nameEn: "Concept of Language", link: "https://drive.google.com/file/d/144Qd hQ2cn52ewhnwntpdTSwrL6KPA0DE /view?usp=sharing" },
+                        { nameBn: "ব্যাকরণ (Grammar)", nameEn: "Grammar", link: "https://drive.google.com/file/d/12DE2 r1n4fJ7EeQJ8jmtlkRHTz0heJEhM/view?usp=sharing" },
+                        { nameBn: "রচনা ও পত্র (Composition & Letter)", nameEn: "Composition & Letter", link: "https://drive.google.com/file/d/1xOwt hClcvG6CWn9nZSpkmpak0Z5-jnC/view?usp=sharing" },
+                        { nameBn: "অনুবাদ (Translation)", nameEn: "Translation", link: "https://drive.google.com/file/d/1xANy kKumhizxTVzlds0jmfLEDWyT8rYO/view?usp=sharing" },
+                        { nameBn: "সম্প্রসারণ ও সারাংশ (Expansion & Summary)", nameEn: "Expansion & Summary", link: "https://drive.google.com/file/d/1gOkb n3iemQBeYtINLP96NiM_-1sTkwQo/view?usp=sharing" },
+                        { nameBn: "প্রশ্ন ও উত্তর (Question & Answer)", nameEn: "Question & Answer", link: "https://drive.google.com/file/d/1LXcw 83IZUp1lcaRTKF87nwPU3SJiRH1w/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "অর্থনীতি ও ইসলামিক অর্থনীতি", 
+                    titleEn: "Economics and Islamic Economics",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "১ম অধ্যায়: সূচনা (Introduction)", nameEn: "Chapter 1: Introduction", link: "https://drive.google.com/file/d/1xSI94 hUZna0fGDl0jckWz1liO7w7yJpz/view?usp=sharing" },
+                        { nameBn: "২য় অধ্যায়: চাহিদা ও যোগান (Demand and Supply)", nameEn: "Chapter 2: Demand and Supply", link: "https://drive.google.com/file/d/18DAL JZr2mdupBpewpj_YOCPmFMppc1k G/view?usp=sharing" },
+                        { nameBn: "৩য় অধ্যায়: ভোক্তার আচরণ (Consumer Behaviour)", nameEn: "Chapter 3: Consumer Behaviour", link: "https://drive.google.com/file/d/144Qd hQ2cn52ewhnwntpdTSwrL6KPA0DE /view?usp=sharing" },
+                        { nameBn: "৪র্থ অধ্যায়: উপযোগ বিবেশ্বণ (Utility Analysis)", nameEn: "Chapter 4: Utility Analysis", link: "https://drive.google.com/file/d/12DE2 r1n4fJ7EeQJ8jmtlkRHTz0heJEhM/view?usp=sharing" },
+                        { nameBn: "৫ম অধ্যায়: উৎপাদন (Production)", nameEn: "Chapter 5: Production", link: "https://drive.google.com/file/d/1xOwt hClcvG6CWn9nZSpkmpak0Z5-jnC/view?usp=sharing" },
+                        { nameBn: "৬ষ্ঠ অধ্যায়: আয় ও সম্পদের বন্দি (Distribution of Income and Wealth)", nameEn: "Chapter 6: Distribution of Income and Wealth", link: "https://drive.google.com/file/d/1xANy kKumhizxTVzlds0jmfLEDWyT8rYO/view?usp=sharing" },
+                        { nameBn: "৭ম অধ্যায়: অর্থ ও আর্থিক নীতি (Money and Monetary Policy)", nameEn: "Chapter 7: Money and Monetary Policy", link: "https://drive.google.com/file/d/1gOkb n3iemQBeYtINLP96NiM_-1sTkwQo/view?usp=sharing" },
+                        { nameBn: "৮ম অধ্যায়: বাজার তত্ত্ব (Theory of Market)", nameEn: "Chapter 8: Theory of Market", link: "https://drive.google.com/file/d/1LXcw 83IZUp1lcaRTKF87nwPU3SJiRH1w/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ১ম অধ্যায়: ইসলামি অর্থনীতি: পরিচিতি, প্রকৃতি, নীতি ও উৎস", nameEn: "Islamic Economics Chapter 1: Islamic Economics: Identity, Nature, Scope and Sources", link: "https://drive.google.com/file/d/1v 05lQwcm_lz4_hMLQwO6yMzol yHihQ9r/view?usp=drive_link" },
+                        { nameBn: "ইসলামি অর্থনীতি ২য় অধ্যায়: আধুনিক অর্থব্যবস্থার সাথে ইসলামি অর্থনীতি তুলনা", nameEn: "Islamic Economics Chapter 2: Islamic Economy Compared to Modern Economic System", link: "https://drive.google.com/file/d/1Y Mdhz2r0rKvQPUOUL394eeoQB XkiE3VC/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৩য় অধ্যায়: ইসলামে কর কাঠামো: যাকাত, উশর, খারাজ ও সাদাকাত", nameEn: "Islamic Economics Chapter 3: Tax Structure in Islam: Zakat, Ushr, Kharaj and Sadaqat", link: "https://drive.google.com/file/d/1P HhbfPWfLrKgJfVaW1SDudwYc1 NycoyZ/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৪র্থ অধ্যায়: ইসলামে মালিকানার ধারণা", nameEn: "Islamic Economics Chapter 4: Concept of Ownership in Islam", link: "https://drive.google.com/file/d/1X kaCgmaFJqN3Q5pIEvjWm9TiQy XFwHPJ/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৫ম অধ্যায়: ইসলামে আয় ও ব্যয়ের ধারণা", nameEn: "Islamic Economics Chapter 5: Concept of Income and Expenditure in Islam", link: "https://drive.google.com/file/d/1s sFjb5VcS1Qf6gUnc5Tn_NK9Wc 2M-jp4/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৬ষ্ঠ অধ্যায়: ইসলামে ভূমি নীতি", nameEn: "Islamic Economics Chapter 6: Land Policy in Islam", link: "https://drive.google.com/file/d/17 C5rT7YGA2CbmntAlg7c9HgzO8 mLAGzF/view?usp=sharing" },
+                        { nameBn: "ইসলামি অর্থনীতি ৭ম অধ্যায়: ইসলামে মুনাফা ও সুদের ধারণা", nameEn: "Islamic Economics Chapter 7: Concept of Profit and Interest in Islam", link: "https://drive.google.com/file/d/1G XWas0T8Xtrm9PHjlSJdqe8mgZ QqS7QX/view?usp=sharing" },
+                        { nameBn: "ইসলামি ব্যাংকিং ১ম অধ্যায়: ইসলামি ব্যাংকিং", nameEn: "Islamic Banking Chapter 1: Islamic Banking", link: "https://drive.google.com/file/d/1 A0Aqjf5AUro6ykpgeq1ZGhTS2r 3aYTQR/view?usp=sharing" },
+                        { nameBn: "ইসলামি ব্যাংকিং ২য় অধ্যায়: ইসলামি ব্যাংকিং কার্যক্রমে আমানত সংগ্ৰহ ও বিনিয়োগ নীতি", nameEn: "Islamic Banking Chapter 2: Deposit and Investment System in Islamic Banking", link: "https://drive.google.com/file/d/1j aUnLEwX61cB_JN4j3ZjgACcD QFYXTRB/view?usp=sharing" },
+                        { nameBn: "ইসলামি ব্যাংকিং ৩য় অধ্যায়: প্রচলিত বিমা ও ইসলামি বিমা (তাকাফুল)", nameEn: "Islamic Banking Chapter 3: Conventional insurance and Islamic insurance (Takaful)", link: "https://drive.google.com/file/d/1h TO_UH_Jtchaijfgu3IN4fYQoYS GW0be/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের প্রশ্ন", nameEn: "Model Test and Previous Year Questions", link: "https://drive.google.com/file/d/1n hC62XwVSUAWJLX167qOqcMt VLSeVWVK/view?usp=sharing" }
+                    ]
+                },
+                { 
+                    titleBn: "বাংলাদেশ স্টাডিজ", 
+                    titleEn: "Bangladesh Studies",
+                    badgeBn: "গাইড", 
+                    badgeEn: "Guide",
+                    icon: "fa-compass", 
+                    chapters: [
+                        { nameBn: "আলোচ্য বিষয়: বাংলাদেশ স্টাডিজ পরিচিতি", nameEn: "Topic: Introduction to Bangladesh Studies", link: "https://drive.google.com/file/d/1SAm0WxlGKGpxPq6J3J6HjPqL6Jz7N9Gt/view?usp=sharing" },
+                        { nameBn: "মডেল টেস্ট ও বিগত সালের প্রশ্ন", nameEn: "Model Test and Previous Year Questions", link: "https://drive.google.com/file/d/1T6L3VkR2W8J9t4M1N7X2Z0A5C1E4R8M/view?usp=sharing" }
+                    ]
+                }
+            ];
+
+            // ----- ভাষার ডেটা -----
+            const langData = {
+                bn: {
+                    sideMenuTitle: "মেনু",
+                    menuBooks: "বইসমূহ",
+                    menuGuides: "গাইডসমূহ",
+                    menuFooter: "ফাজিল (অনার্স) ১ম বর্ষ আল-হাদিস এন্ড ইসলামিক স্টাডিজ বিভাগ",
+                    mainTitle: "ফাজিল (অনার্স) ১ম বর্ষ আল-হাদিস এন্ড ইসলামিক স্টাডিজ বিভাগ",
+                    headerSub: "বই ও গাইড PDF",
+                    searchPlaceholder: "বই, গাইড বা অধ্যায়ের নাম লিখুন...",
+                    tabBooks: "বইসমূহ",
+                    tabGuides: "গাইড",
+                    noResult: "আপনার অনুসন্ধানের সাথে মিলে এমন কোনো বই বা গাইড পাওয়া যায়নি।",
+                    footerText: "প্রতিটি অধ্যায়ে ক্লিক করলে গুগল ড্রাইভে যাবে",
+                    langLabel: "English",
+                    langToggle: "English"
+                },
+                en: {
+                    sideMenuTitle: "Menu",
+                    menuBooks: "Books",
+                    menuGuides: "Guides",
+                    menuFooter: " Fazil (Hons) 1st Year Al-Hadith and Islamic Studies",
+                    mainTitle: " Fazil (Hons) 1st Year Al-Hadith and Islamic Studies",
+                    headerSub: "Books & Guides PDF",
+                    searchPlaceholder: "Search for books, guides or chapters...",
+                    tabBooks: "Books",
+                    tabGuides: "Guides",
+                    noResult: "No books or guides found matching your search.",
+                    footerText: "Click on any chapter to go to Google Drive",
+                    langLabel: "বাংলা",
+                    langToggle: "বাংলা"
+                }
+            };
+
+            // ----- DOM রেফারেন্স -----
+            const booksPanel = document.getElementById('books-panel');
+            const guidesPanel = document.getElementById('guides-panel');
+            const booksGrid = document.getElementById('booksGrid');
+            const guidesGrid = document.getElementById('guidesGrid');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const searchInput = document.getElementById('searchInput');
+            const searchClear = document.getElementById('searchClear');
+            const noResult = document.getElementById('noResult');
+            const langToggle = document.getElementById('langToggle');
+
+            // ভাষা নির্ভর এলিমেন্ট
+            const langElements = {
+                sideMenuTitle: document.getElementById('sideMenuTitle'),
+                menuBooksLabel: document.getElementById('menuBooksLabel'),
+                menuGuidesLabel: document.getElementById('menuGuidesLabel'),
+                menuFooter: document.getElementById('menuFooter'),
+                mainTitle: document.getElementById('mainTitle'),
+                headerSubtitle: document.getElementById('headerSubtitle'),
+                searchInput: document.getElementById('searchInput'),
+                noResultMsg: document.getElementById('noResultMsg'),
+                footerText: document.getElementById('footerText'),
+                langLabel: document.getElementById('langLabel'),
+                tabLabels: document.querySelectorAll('.tabLabel')
+            };
+
+            // ----- সাইড মেনু এলিমেন্ট -----
+            const sideMenu = document.getElementById('sideMenu');
+            const sideOverlay = document.getElementById('sideOverlay');
+            const menuToggleBtn = document.getElementById('menuToggleBtn');
+            const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+            // ----- স্টেট -----
+            let currentLang = 'bn'; // 'bn' বা 'en'
+            let currentTab = 'books';
+
+            // ----- সাইড মেনু টগল -----
+            function openMenu() {
+                sideMenu.classList.add('open');
+                sideOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                sideMenu.classList.remove('open');
+                sideOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            menuToggleBtn.addEventListener('click', openMenu);
+            closeMenuBtn.addEventListener('click', closeMenu);
+            sideOverlay.addEventListener('click', closeMenu);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sideMenu.classList.contains('open')) closeMenu();
+            });
+
+            // ----- সাইড মেনু ডায়নামিক কন্টেন্ট -----
+            function buildMenuDropdown(dataArray, containerId, type) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = '';
+
+                dataArray.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    
+                    const parentDiv = document.createElement('div');
+                    parentDiv.className = 'menu-item-parent';
+                    parentDiv.setAttribute('data-target', `sub-${type}-${index}`);
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = `menu-item-name-${type}-${index}`;
+                    nameSpan.innerHTML = `<i class="fas ${item.icon || 'fa-book'}"></i> <span class="menu-item-text">${currentLang === 'bn' ? item.titleBn : item.titleEn}</span>`;
+                    
+                    const arrowSpan = document.createElement('span');
+                    arrowSpan.className = 'arrow-icon';
+                    arrowSpan.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                    
+                    parentDiv.appendChild(nameSpan);
+                    parentDiv.appendChild(arrowSpan);
+                    
+                    const subList = document.createElement('ul');
+                    subList.className = 'sub-chapter-list';
+                    subList.id = `sub-${type}-${index}`;
+                    
+                    if (item.chapters && item.chapters.length > 0) {
+                        item.chapters.forEach(ch => {
+                            const subLi = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = ch.link;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.innerHTML = `<span>${currentLang === 'bn' ? ch.nameBn : ch.nameEn}</span> <i class="fas fa-arrow-right"></i>`;
+                            subLi.appendChild(link);
+                            subList.appendChild(subLi);
+                        });
+                    } else {
+                        const emptyLi = document.createElement('li');
+                        emptyLi.textContent = currentLang === 'bn' ? 'কোন অধ্যায় নেই' : 'No chapters';
+                        emptyLi.style.fontSize = '0.85rem';
+                        emptyLi.style.color = '#6e5b48';
+                        subList.appendChild(emptyLi);
+                    }
+                    
+                    li.appendChild(parentDiv);
+                    li.appendChild(subList);
+                    container.appendChild(li);
+                });
+
+                container.querySelectorAll('.menu-item-parent').forEach(parent => {
+                    parent.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const targetId = this.getAttribute('data-target');
+                        const subList = document.getElementById(targetId);
+                        if (subList) {
+                            subList.classList.toggle('open');
+                            const arrowIcon = this.querySelector('.arrow-icon i');
+                            if (arrowIcon) {
+                                arrowIcon.classList.toggle('fa-chevron-down');
+                                arrowIcon.classList.toggle('fa-chevron-up');
+                            }
+                        }
+                    });
+                });
+            }
+
+            // ----- মেনু সেকশন টগল -----
+            document.querySelectorAll('.menu-section-title[data-toggle]').forEach(title => {
+                title.addEventListener('click', function() {
+                    const dropdownId = this.getAttribute('data-toggle') === 'bookSection' 
+                        ? 'bookSectionDropdown' 
+                        : 'guideSectionDropdown';
+                    const dropdown = document.getElementById(dropdownId);
+                    if (dropdown) {
+                        dropdown.classList.toggle('open');
+                        const icon = this.querySelector('.toggle-icon i');
+                        if (icon) {
+                            icon.classList.toggle('fa-chevron-down');
+                            icon.classList.toggle('fa-chevron-up');
+                        }
+                    }
+                });
+            });
+
+            // ----- কার্ড তৈরি -----
+            function createCard(item, type) {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                const delay = Math.floor(Math.random() * 150) + 50;
+                card.style.animationDelay = delay + 'ms';
+
+                const iconClass = item.icon || (type === 'book' ? 'fa-book' : 'fa-compass');
+                const title = currentLang === 'bn' ? item.titleBn : item.titleEn;
+                const badge = currentLang === 'bn' ? item.badgeBn : item.badgeEn;
+
+                let chaptersHtml = '';
+                if (item.chapters && item.chapters.length > 0) {
+                    const listItems = item.chapters.map(ch => {
+                        const chName = currentLang === 'bn' ? ch.nameBn : ch.nameEn;
+                        return `
+                            <li class="chapter-item">
+                                <a href="${ch.link}" target="_blank" rel="noopener noreferrer" class="chapter-link">
+                                    <span><i class="fas fa-caret-left" style="margin-right: 8px;"></i>${chName}</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </li>
+                        `;
+                    }).join('');
+                    chaptersHtml = `<ul class="chapter-list">${listItems}</ul>`;
+                } else {
+                    chaptersHtml = `<p style="font-size:0.9rem; color:#6e5b48; margin-top:10px;"><i class="fas fa-info-circle"></i> ${currentLang === 'bn' ? 'কোন অধ্যায় নেই' : 'No chapters'}</p>`;
+                }
+
+                card.innerHTML = `
+                    <div class="card-header">
+                        <i class="fas ${iconClass}" aria-hidden="true"></i>
+                        <span class="card-title">${title}</span>
+                    </div>
+                    <span class="card-badge"><i class="fas fa-tag" style="margin-right: 4px;"></i>${badge}</span>
+                    ${chaptersHtml}
+                `;
+                return card;
+            }
+
+            function renderGrid(gridElement, dataArray, type) {
+                gridElement.innerHTML = '';
+                dataArray.forEach(item => {
+                    const card = createCard(item, type);
+                    gridElement.appendChild(card);
+                });
+            }
+
+            // ----- রি-রেন্ডার সবকিছু (ভাষা পরিবর্তনে) -----
+            function renderAll() {
+                // গ্রিড রেন্ডার
+                renderGrid(booksGrid, booksData, 'book');
+                renderGrid(guidesGrid, guidesData, 'guide');
+                
+                // সাইড মেনু রি-বিল্ড
+                buildMenuDropdown(booksData, 'bookSectionDropdown', 'book');
+                buildMenuDropdown(guidesData, 'guideSectionDropdown', 'guide');
+
+                // টেক্সট আপডেট
+                const lang = currentLang;
+                const data = langData[lang];
+                
+                langElements.sideMenuTitle.textContent = data.sideMenuTitle;
+                langElements.menuBooksLabel.textContent = data.menuBooks;
+                langElements.menuGuidesLabel.textContent = data.menuGuides;
+                langElements.menuFooter.innerHTML = `<i class="fas fa-mosque"></i> ${data.menuFooter}`;
+                langElements.mainTitle.textContent = data.mainTitle;
+                langElements.headerSubtitle.innerHTML = `<i class="fas fa-chevron-circle-right" style="margin-right: 6px;"></i> ${data.headerSub}`;
+                langElements.searchInput.placeholder = data.searchPlaceholder;
+                langElements.noResultMsg.textContent = data.noResult;
+                langElements.footerText.textContent = data.footerText;
+                langElements.langLabel.textContent = data.langLabel;
+                
+                langElements.tabLabels.forEach((el, idx) => {
+                    el.textContent = idx === 0 ? data.tabBooks : data.tabGuides;
+                });
+
+                // সার্চ রিসেট
+                searchInput.value = '';
+                performSearch('');
+                searchClear.classList.remove('visible');
+                noResult.classList.remove('visible');
+            }
+
+            // ----- সার্চ ফাংশন -----
+            function performSearch(query) {
+                const allCards = document.querySelectorAll('.book-card');
+                const normalizedQuery = query.trim().toLowerCase();
+                
+                let hasVisible = false;
+
+                allCards.forEach(card => {
+                    const title = card.querySelector('.card-title')?.textContent?.toLowerCase() || '';
+                    const badge = card.querySelector('.card-badge')?.textContent?.toLowerCase() || '';
+                    const chapters = card.querySelectorAll('.chapter-item span');
+                    let chapterMatch = false;
+                    
+                    chapters.forEach(ch => {
+                        const chText = ch.textContent?.toLowerCase() || '';
+                        if (chText.includes(normalizedQuery)) {
+                            chapterMatch = true;
+                        }
+                    });
+
+                    const matches = title.includes(normalizedQuery) || 
+                                   badge.includes(normalizedQuery) || 
+                                   chapterMatch;
+
+                    if (normalizedQuery === '') {
+                        card.classList.remove('hidden');
+                        hasVisible = true;
+                    } else if (matches) {
+                        card.classList.remove('hidden');
+                        hasVisible = true;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                if (normalizedQuery !== '' && !hasVisible) {
+                    noResult.classList.add('visible');
+                } else {
+                    noResult.classList.remove('visible');
+                }
+
+                if (normalizedQuery !== '') {
+                    searchClear.classList.add('visible');
+                } else {
+                    searchClear.classList.remove('visible');
+                }
+            }
+
+            // ----- সার্চ ইভেন্ট -----
+            searchInput.addEventListener('input', function() {
+                performSearch(this.value);
+            });
+
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                performSearch('');
+                searchInput.focus();
+            });
+
+            // ----- ট্যাব সুইচ -----
+            function switchTab(tabId) {
+                currentTab = tabId;
+                tabButtons.forEach(btn => {
+                    const isActive = btn.dataset.tab === tabId;
+                    btn.classList.toggle('active', isActive);
+                    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                });
+
+                if (tabId === 'books') {
+                    booksPanel.style.display = 'block';
+                    guidesPanel.style.display = 'none';
+                } else {
+                    booksPanel.style.display = 'none';
+                    guidesPanel.style.display = 'block';
+                }
+
+                searchInput.value = '';
+                performSearch('');
+                searchClear.classList.remove('visible');
+                noResult.classList.remove('visible');
+            }
+
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const tab = this.dataset.tab;
+                    switchTab(tab);
+                });
+            });
+
+            // ----- ভাষা টগল -----
+            langToggle.addEventListener('click', function() {
+                currentLang = currentLang === 'bn' ? 'en' : 'bn';
+                renderAll();
+                // ট্যাব অবস্থান ঠিক রাখা
+                switchTab(currentTab);
+            });
+
+            // ----- প্রাথমিক রেন্ডার -----
+            renderAll();
+            switchTab('books');
+
+            console.log('✅ আল-হাদিস ও ইসলামিক স্টাডিজ ওয়েবসাইট লোড হয়েছে (বাংলা + ইংরেজি)।');
+        })();
+    </script>
+</body>
+</html>
